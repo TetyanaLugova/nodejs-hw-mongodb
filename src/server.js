@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import { env } from './utils/env.js';
+import { getAllContacts, getContactById } from './services/contacts.js';
 
 dotenv.config();
 
@@ -28,20 +29,25 @@ export const setupServer = () => {
   );
 
   app.get('/contacts/', async (req, res) => {
-    const contacts = await getAllContacts();
+    try {
+      const contacts = await getAllContacts();
+      res.status(200).json({
+        status: 200,
+        message: `Success!`,
+        data: contacts,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
-    res.status(200).json({
-      status: 200,
-
-      message: `Success!`,
-      data: contacts,
-    });
-
-    app.get('/contacts/:contactId', async (req, res) => {
+  app.get('/contacts/:contactId', async (req, res) => {
+    try {
       const { contactId } = req.params;
       const contact = await getContactById(contactId);
 
-      if (!contact) {
+      if (contact === null) {
         res.status(404).json({
           message: 'Contact not found',
         });
@@ -53,10 +59,13 @@ export const setupServer = () => {
         message: `Successfully found contact with id ${contactId}!`,
         data: contact,
       });
-    });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
   });
 
-  app.use('*', (req, res, next) => {
+  app.use('*', (req, res) => {
     res.status(404).json({
       message: 'Not found',
     });
