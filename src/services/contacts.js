@@ -22,9 +22,7 @@ export const getAllContacts = async ({
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
-  const contactsCount = await ContactsCollection.find({
-    userId,
-  })
+  const contactsCount = await ContactsCollection.find({ userId })
     .merge(contactsQuery)
     .countDocuments();
 
@@ -48,7 +46,11 @@ export const getContactById = async (contactId, userId) => {
 };
 
 export const createContacts = async (payload) => {
-  const contact = await ContactsCollection.create(payload);
+  const contact = new ContactsCollection({
+    ...payload,
+    userId: payload.userId,
+  });
+  await contact.save();
   return contact;
 };
 
