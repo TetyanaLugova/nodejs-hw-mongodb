@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { env } from '../utils/env.js';
 dotenv.config();
 
-export const initMongoConnection = async () => {
+export const initMongoDB = async () => {
   try {
     const user = env('MONGODB_USER');
     const pwd = env('MONGODB_PASSWORD');
