@@ -129,8 +129,6 @@ export const requestResetToken = async (email) => {
     link: `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`,
   });
 
-  console.log(html);
-
   await sendMail({
     from: env(SMTP.SMTP_FROM),
     to: email,
