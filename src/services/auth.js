@@ -123,10 +123,13 @@ export const requestResetToken = async (email) => {
   ).toString();
 
   const template = handlebars.compile(templateSource);
+
   const html = template({
     name: user.name,
     link: `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`,
   });
+
+  console.log(html);
 
   await sendMail({
     from: env(SMTP.SMTP_FROM),
